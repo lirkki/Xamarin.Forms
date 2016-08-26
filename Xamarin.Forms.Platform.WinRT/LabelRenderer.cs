@@ -34,6 +34,7 @@ namespace Xamarin.Forms.Platform.WinRT
 	public class LabelRenderer : ViewRenderer<Label, TextBlock>
 	{
 		bool _fontApplied;
+		bool _isNotInitiallyDefault;
 
 		protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
 		{
@@ -70,6 +71,9 @@ namespace Xamarin.Forms.Platform.WinRT
 				{
 					SetNativeControl(new TextBlock());
 				}
+
+				if (!Element.IsDefault())
+					_isNotInitiallyDefault = true;
 
 				UpdateText(Control);
 				UpdateColor(Control);
@@ -134,7 +138,7 @@ namespace Xamarin.Forms.Platform.WinRT
 				return;
 
 #pragma warning disable 618
-			Font fontToApply = label.IsDefault() ? Font.SystemFontOfSize(NamedSize.Medium) : label.Font;
+			Font fontToApply = label.IsDefault() && !_isNotInitiallyDefault ? Font.SystemFontOfSize(NamedSize.Medium) : label.Font;
 #pragma warning restore 618
 
 			textBlock.ApplyFont(fontToApply);
